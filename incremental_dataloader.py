@@ -1,7 +1,3 @@
-'''
-TaICML incremental learning
-Copyright (c) Jathushan Rajasegaran, 2019
-'''
 import os
 import random
 import numpy as np

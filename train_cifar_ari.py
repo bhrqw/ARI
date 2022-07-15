@@ -1,7 +1,3 @@
-'''
-TaICML incremental learning
-Copyright (c) Jathushan Rajasegaran, 2019
-'''
 from __future__ import print_function
 import argparse
 import os
@@ -9,10 +5,8 @@ import shutil
 import time
 import pickle
 import torch
-import pdb
 import numpy as np
 import copy
-import torch
 import sys
 import random
 import collections
@@ -28,9 +22,9 @@ from attack_type import attackers
 class args:
 
     
-    checkpoint = "checkpoint"
+    checkpoint = "path"
     savepoint = "models/" + "/".join(checkpoint.split("/")[1:])
-    data_path = "data_path"
+    data_path = "path"
     num_class = 100
     class_per_task = 10
     num_task = 10
@@ -42,8 +36,8 @@ class args:
     
     epochs = 70
     lr = 0.01
-    train_batch = 100
-    test_batch = 50
+    train_batch = 512
+    test_batch = 100
     workers = 16
     sess = 0
     schedule = [20,40,60]
@@ -78,6 +72,8 @@ if use_cuda:
 
 def main():
 
+    # import pdb;pdb.set_trace()
+
     model = BasicNet1(args, 0).cuda() 
     model = nn.DataParallel(model).cuda()
 
@@ -90,8 +86,8 @@ def main():
         mkdir_p(args.savepoint)
     np.save(args.checkpoint + "/seed.npy", seed)
     try:
-        shutil.copy2('train_cifar.py', args.checkpoint)
-        shutil.copy2('learner_task_itaml.py', args.checkpoint)
+        shutil.copy2('train_cifar_ari.py', args.checkpoint)
+        shutil.copy2('learner_task_ari.py', args.checkpoint)
     except:
         pass
     inc_dataset = data.IncrementalDataset(
@@ -136,7 +132,6 @@ def main():
         print(task_info)
         print(inc_dataset.sample_per_task_testing)
         args.sample_per_task_testing = inc_dataset.sample_per_task_testing
-        
         train_criterion = CELS.CrossEntropyLabelSmooth(args.num_class, args.label_smooth).cuda()
         if args.attack_type:
             attacker_train = attackers[args.attack_type](model, loss_fn=train_criterion, eps=args.eps, nb_iter=args.nb_iter, \

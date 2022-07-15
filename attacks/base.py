@@ -1,4 +1,4 @@
-# Copyright (c) 2018-present, Royal Bank of Canada.
+# Copyright runqiwang.
 # All rights reserved.
 #
 # This source code is licensed under the license found in the
